@@ -13,9 +13,13 @@ namespace Microsoft.MSDN.Samples.GraphicObjects
         protected int m_HorizRes = 72;
         protected int m_VertRes = 72;
         protected int DRAG_HANDLE_SIZE = 8;
+        // Paint-time scratch values and a subscriber list are not part of the saved document, and
+        // the binary formatter refuses to save a graph that contains either of them.
+        [NonSerialized()]
         protected Graphics ImageGraphic = null;
         protected GraphicObjects m_Gobj;
         public RectangleF[] Drag_Handles = new RectangleF[10];
+        [field: NonSerialized()]
         public event ObjectChangedEventHandler ObjectChanged;
 
         public delegate void ObjectChangedEventHandler(GraphicObjects e);

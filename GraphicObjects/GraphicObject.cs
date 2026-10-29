@@ -46,6 +46,9 @@ namespace Microsoft.MSDN.Samples.GraphicObjects
         protected Color m_FillColor = default;
         protected bool m_Fill = false;
         protected Color m_LineColor = default;
+        // Draw-time only. Graphics cannot be serialized, and holding one made every object
+        // impossible to save: the binary formatter rejects the whole graph.
+        [NonSerialized()]
         protected Graphics m_Graphics = null;
         // Protected m_RectangleF As RectangleF
         private RectangleF[] Drag_Handles = new RectangleF[8];

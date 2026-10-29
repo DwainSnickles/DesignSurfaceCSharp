@@ -551,7 +551,10 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             try
             {
                 var myBinarySerializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                m_drawingObjects = (MSDN.Samples.GraphicObjects.GraphicObjectCollection)myBinarySerializer.Deserialize(new FileStream(fileName, FileMode.Open));
+                // The stream has to be closed: an open one keeps the file locked for as long as the
+                // process lives, so the surface could not be loaded again after being saved.
+                using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                    m_drawingObjects = (MSDN.Samples.GraphicObjects.GraphicObjectCollection)myBinarySerializer.Deserialize(stream);
                 SelectedObject = null;
                 StatusUpdate?.Invoke(this, new StatusUpdateEventArgs(StatusUpdateType.FileLoaded, null, string.Format("file {0} loaded into the Graphic Surface", fileName), default, (float)default));
                 Invalidate();
@@ -568,9 +571,11 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             // save objects to a binary file
             try
             {
-                string settingsPath = fileName;
                 var myBinarySerializer = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                myBinarySerializer.Serialize(new FileStream(settingsPath, FileMode.Create), drawingObjects);
+                // Closing the stream flushes the buffered bytes; otherwise the saved file is held
+                // open and only partly written when something tries to read it back.
+                using (var stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                    myBinarySerializer.Serialize(stream, drawingObjects);
                 StatusUpdate?.Invoke(this, new StatusUpdateEventArgs(StatusUpdateType.FileSaved, m_SelectedObject, string.Format("Graphic Surface saved to file {0}", fileName), default, (float)default));
             }
             catch (Exception e)
