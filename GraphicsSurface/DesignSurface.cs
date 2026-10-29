@@ -1156,7 +1156,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
             set
             {
-                m_ShowGrid = false;
+                m_ShowGrid = value;
                 Invalidate();
             }
         }
@@ -1169,7 +1169,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
             set
             {
-                m_ShowMargins = false;
+                m_ShowMargins = value;
                 Invalidate();
             }
         }
