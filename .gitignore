@@ -1,0 +1,23 @@
+## Visual Studio / MSBuild build output
+.vs/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## NuGet restored packages (recreated from packages.config)
+packages/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## ReSharper / Roslyn caches
+_ReSharper*/
+*.DotSettings.user
+
+## Test output
+[Tt]est[Rr]esult*/
+TestResults/

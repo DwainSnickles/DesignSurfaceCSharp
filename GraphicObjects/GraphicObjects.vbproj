@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>7.10.3077</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0C3364C4-717C-4A8B-A94D-8DDEEFC6AB43}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon />
+    <AssemblyKeyContainerName />
+    <AssemblyName>GraphicObjects</AssemblyName>
+    <AssemblyOriginatorKeyFile />
+    <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionStrict>Off</OptionStrict>
+    <RootNamespace>Microsoft.MSDN.Samples</RootNamespace>
+    <StartupObject>Microsoft.MSDN.Samples.%28None%29</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>0.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>GraphicObjects.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile />
+    <DefineConstants />
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>GraphicObjects.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile />
+    <DefineConstants />
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <DebugType>none</DebugType>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ColorControl\ClColor.vb" />
+    <Compile Include="ColorControl\ModGen.vb" />
+    <Compile Include="frmEditImageObject.Designer.vb">
+      <DependentUpon>frmEditImageObject.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmEditImageObject.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GraphicObject.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GraphicObjects.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Image Filters\Brightness.vb" />
+    <Compile Include="Image Filters\ColorExtraction.vb" />
+    <Compile Include="Image Filters\ColorFilter.vb" />
+    <Compile Include="Image Filters\Contrast.vb" />
+    <Compile Include="Image Filters\Contrast2.vb" />
+    <Compile Include="Image Filters\ConvolutionFilters.vb" />
+    <Compile Include="Image Filters\EdgeDetectConvolution.vb" />
+    <Compile Include="Image Filters\EdgeDetectDifference.vb" />
+    <Compile Include="Image Filters\EdgeDetectHomogenity.vb" />
+    <Compile Include="Image Filters\EdgeDetectionHorizontal.vb" />
+    <Compile Include="Image Filters\EdgeDetectionTwoPixelTest.vb" />
+    <Compile Include="Image Filters\EdgeDetectionVertical.vb" />
+    <Compile Include="Image Filters\EdgeEnhance.vb" />
+    <Compile Include="Image Filters\Gamma.vb" />
+    <Compile Include="Image Filters\GreyScale.vb" />
+    <Compile Include="Image Filters\GreyScale2.vb" />
+    <Compile Include="Image Filters\Inverse.vb" />
+    <Compile Include="Image Filters\Part5Filters.vb" />
+    <Compile Include="Image Filters\Pixelate2.vb" />
+    <Compile Include="Image Filters\PSCColorMatrixesClass.vb" />
+    <Compile Include="Image Filters\ResizeLockbits.vb" />
+    <Compile Include="Image Filters\ResizeSetPixel.vb" />
+    <Compile Include="Image Filters\Utilities.vb" />
+    <Compile Include="ImageGraphics.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Knob Control\CUtility.vb" />
+    <Compile Include="Knob Control\KnobControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ShapeGraphics.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextGraphic.vb">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Knob Control\KnobControl.resx">
+      <DependentUpon>KnobControl.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent />
+    <PostBuildEvent />
+  </PropertyGroup>
+</Project>
