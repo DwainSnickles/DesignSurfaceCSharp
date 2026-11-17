@@ -77,5 +77,3 @@ Derived from the Microsoft DesignSurface sample; see each project's
 ---
 
 <p align="center"><sub>Built for <a href="https://github.com/DwainSnickles">Dwain Snickles</a> · used by <a href="https://github.com/DwainSnickles/GraphicsWorkshop">GraphicsWorkshop</a></sub></p>
-</file_path_path>
-</invoke>
