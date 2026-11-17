@@ -6,6 +6,8 @@ Drop the `DesignSurface` control into any WinForms app and you get a page with
 margins, a dot grid, object selection, undo/redo and a print pipeline, ready to
 host text, images, shapes and more.
 
+> **.NET 8+ edition:** [DesignSurface.NET](https://github.com/DwainSnickles/DesignSurface.NET) ports this codebase to modern .NET SDK-style projects.
+
 <p align="center">
   <img src="assets/design-surface.svg" alt="DesignSurface canvas with grid, margins and graphic objects, beside a capabilities list" width="880">
 </p>
