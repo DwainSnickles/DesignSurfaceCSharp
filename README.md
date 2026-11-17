@@ -1,4 +1,4 @@
-# DesignSurfaceCSharp
+# DesignSurface - CSharp
 
 A scrollable, zoomable **design surface** for WinForms — the canvas half of a
 label/graphic designer — plus the **graphic object model** that draws on it.
