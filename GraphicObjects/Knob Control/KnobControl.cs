@@ -12,7 +12,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     // Delegate type for hooking up ValueChanged notifications. 

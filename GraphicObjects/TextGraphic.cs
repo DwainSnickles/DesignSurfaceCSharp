@@ -14,7 +14,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Microsoft.MSDN.Samples.GraphicObjects
+namespace GraphicObjects
 {
 
 

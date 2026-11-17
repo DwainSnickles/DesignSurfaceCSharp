@@ -10,7 +10,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("GraphicObjects")> 
 <Assembly: AssemblyDescription("Contains an object model to track graphic elements for use with a design surface.")> 
 <Assembly: AssemblyCompany("Microsoft")> 
-<Assembly: AssemblyProduct("MSDN")> 
+<Assembly: AssemblyProduct("GraphicObjects")> 
 <Assembly: AssemblyCopyright("")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: CLSCompliant(True)> 

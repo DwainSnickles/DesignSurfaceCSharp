@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.VisualBasic.CompilerServices;
 
-namespace Microsoft.Msdn.Samples.DesignSurface
+namespace DesignSurface
 {
 
 
@@ -98,16 +97,16 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             mMousePointDown = e.Location;
 
             // compute screen coordinates of mouse point
-            mMousePointDownScrCo = (Point)((dynamic)sender).PointToScreen(mMousePointDown);
+            mMousePointDownScrCo = pb.PointToScreen(mMousePointDown);
 
             // set picture box to top of z-order
             pb.BringToFront();
 
             // store height of picture box
-            iPicBoxOldHeight = Conversions.ToInteger(((dynamic)sender).Height);
+            iPicBoxOldHeight = pb.Height;
 
             // store width of picture box
-            iPicBoxOldWidth = Conversions.ToInteger(((dynamic)sender).Width);
+            iPicBoxOldWidth = pb.Width;
 
             // set flag for "mouse is on little rectangle at top border of picture box"
             if (MouseIsOnRectTopLeft(sender, mMousePointDown))
@@ -199,7 +198,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
 
             // compute point with screen coordinates
-            sPointOnScreen = (Point)((dynamic)sender).PointToScreen(mMousePointMove);
+            sPointOnScreen = pb.PointToScreen(mMousePointMove);
 
             // Perform this block when mouse cursor is in the little rectangle on
             // top of the picture box or when mMouseIsOnRectTopFlag is set to True.
@@ -649,7 +648,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectTopRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(MousePoint.X, Operators.SubtractObject(Operators.DivideObject(((dynamic)sender).Width, 2), rectsize / 2d), false), Operators.ConditionalCompareObjectLessEqual(MousePoint.X, Operators.AddObject(Operators.DivideObject(((dynamic)sender).Width, 2), rectsize / 2d), false)), MousePoint.Y >= 0), MousePoint.Y <= rectsize)))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= pb.Width / 2.0 - rectsize / 2.0 && MousePoint.X <= pb.Width / 2.0 + rectsize / 2.0 && MousePoint.Y >= 0 && MousePoint.Y <= rectsize)
             {
                 MouseIsOnRectTopRet = true;
             }
@@ -664,7 +665,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectTopRightRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(MousePoint.X, Operators.SubtractObject(((dynamic)sender).Width, rectsize), false), Operators.ConditionalCompareObjectLessEqual(MousePoint.X, ((dynamic)sender).Width, false)), MousePoint.Y >= 0), MousePoint.Y <= rectsize)))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= pb.Width - rectsize && MousePoint.X <= pb.Width && MousePoint.Y >= 0 && MousePoint.Y <= rectsize)
             {
                 MouseIsOnRectTopRightRet = true;
             }
@@ -679,7 +682,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectRightRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(MousePoint.X, Operators.SubtractObject(((dynamic)sender).Width, rectsize), false), Operators.ConditionalCompareObjectLessEqual(MousePoint.X, ((dynamic)sender).Width, false)), Operators.ConditionalCompareObjectGreaterEqual(MousePoint.Y, Operators.SubtractObject(Operators.DivideObject(((dynamic)sender).Height, 2), rectsize / 2d), false)), Operators.ConditionalCompareObjectLessEqual(MousePoint.Y, Operators.AddObject(Operators.DivideObject(((dynamic)sender).Height, 2), rectsize / 2d), false))))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= pb.Width - rectsize && MousePoint.X <= pb.Width && MousePoint.Y >= pb.Height / 2.0 - rectsize / 2.0 && MousePoint.Y <= pb.Height / 2.0 + rectsize / 2.0)
             {
                 MouseIsOnRectRightRet = true;
             }
@@ -694,7 +699,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectBottomRightRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(MousePoint.X, Operators.SubtractObject(((dynamic)sender).Width, rectsize), false), Operators.ConditionalCompareObjectLessEqual(MousePoint.X, ((dynamic)sender).Width, false)), Operators.ConditionalCompareObjectGreaterEqual(MousePoint.Y, Operators.SubtractObject(((dynamic)sender).Height, rectsize), false)), Operators.ConditionalCompareObjectLessEqual(MousePoint.Y, ((dynamic)sender).Height, false))))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= pb.Width - rectsize && MousePoint.X <= pb.Width && MousePoint.Y >= pb.Height - rectsize && MousePoint.Y <= pb.Height)
             {
                 MouseIsOnRectBottomRightRet = true;
             }
@@ -709,7 +716,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectBottomRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(MousePoint.X, Operators.SubtractObject(Operators.DivideObject(((dynamic)sender).Width, 2), rectsize / 2d), false), Operators.ConditionalCompareObjectLessEqual(MousePoint.X, Operators.AddObject(Operators.DivideObject(((dynamic)sender).Width, 2), rectsize / 2d), false)), Operators.ConditionalCompareObjectGreaterEqual(MousePoint.Y, Operators.SubtractObject(((dynamic)sender).Height, rectsize), false)), Operators.ConditionalCompareObjectLessEqual(MousePoint.Y, ((dynamic)sender).Height, false))))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= pb.Width / 2.0 - rectsize / 2.0 && MousePoint.X <= pb.Width / 2.0 + rectsize / 2.0 && MousePoint.Y >= pb.Height - rectsize && MousePoint.Y <= pb.Height)
             {
                 MouseIsOnRectBottomRet = true;
             }
@@ -724,7 +733,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectBottomLeftRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(MousePoint.X >= 0 & MousePoint.X <= rectsize, Operators.ConditionalCompareObjectGreaterEqual(MousePoint.Y, Operators.SubtractObject(((dynamic)sender).Height, rectsize), false)), Operators.ConditionalCompareObjectLessEqual(MousePoint.Y, ((dynamic)sender).Height, false))))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= 0 && MousePoint.X <= rectsize && MousePoint.Y >= pb.Height - rectsize && MousePoint.Y <= pb.Height)
             {
                 MouseIsOnRectBottomLeftRet = true;
             }
@@ -739,7 +750,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             MouseIsOnRectLeftRet = false;
 
-            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(MousePoint.X >= 0 & MousePoint.X <= rectsize, Operators.ConditionalCompareObjectGreaterEqual(MousePoint.Y, Operators.SubtractObject(Operators.DivideObject(((dynamic)sender).Height, 2), rectsize / 2d), false)), Operators.ConditionalCompareObjectLessEqual(MousePoint.Y, Operators.AddObject(Operators.DivideObject(((dynamic)sender).Height, 2), rectsize / 2d), false))))
+            var pb = (PictureBox)sender;
+
+            if (MousePoint.X >= 0 && MousePoint.X <= rectsize && MousePoint.Y >= pb.Height / 2.0 - rectsize / 2.0 && MousePoint.Y <= pb.Height / 2.0 + rectsize / 2.0)
             {
                 MouseIsOnRectLeftRet = true;
             }
@@ -800,20 +813,22 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             var blackPen1 = new Pen(Color.Black, 1f);
             var blackPen2 = new Pen(Color.Black, 2f);
 
-            // Create rectangle.
-            var rect = new Rectangle(0, 0, Conversions.ToInteger(((dynamic)sender).Width), Conversions.ToInteger(((dynamic)sender).Height));
+            var pb = (PictureBox)sender;
 
-            float sSenderWidth = Conversions.ToSingle(Operators.DivideObject(((dynamic)sender).Width, 2));
-            float sSenderHeight = Conversions.ToSingle(Operators.DivideObject(((dynamic)sender).Height, 2));
+            // Create rectangle.
+            var rect = new Rectangle(0, 0, pb.Width, pb.Height);
+
+            float sSenderWidth = pb.Width / 2f;
+            float sSenderHeight = pb.Height / 2f;
 
             var rectTopLeft = new Rectangle(0, 0, rectsize, rectsize);
-            var rectTop = new Rectangle((int)Math.Round((double)sSenderWidth - rectsize / 2d), 0, rectsize, rectsize);
-            var rectTopRight = new Rectangle(Conversions.ToInteger(Operators.SubtractObject(((dynamic)sender).Width, rectsize)), 0, rectsize, rectsize);
-            var rectRight = new Rectangle(Conversions.ToInteger(Operators.SubtractObject(((dynamic)sender).Width, rectsize)), (int)Math.Round((double)sSenderHeight - rectsize / 2d), rectsize, rectsize);
-            var rectBottomRight = new Rectangle((int)Math.Round((double)sSenderWidth - rectsize / 2d), Conversions.ToInteger(Operators.SubtractObject(((dynamic)sender).Height, rectsize)), rectsize, rectsize);
-            var rectBottom = new Rectangle(Conversions.ToInteger(Operators.SubtractObject(((dynamic)sender).Width, rectsize)), Conversions.ToInteger(Operators.SubtractObject(((dynamic)sender).Height, rectsize)), rectsize, rectsize);
-            var rectBottomLeft = new Rectangle(0, Conversions.ToInteger(Operators.SubtractObject(((dynamic)sender).Height, rectsize)), rectsize, rectsize);
-            var rectLeft = new Rectangle(0, (int)Math.Round((double)sSenderHeight - rectsize / 2d), rectsize, rectsize);
+            var rectTop = new Rectangle((int)Math.Round(sSenderWidth - rectsize / 2d), 0, rectsize, rectsize);
+            var rectTopRight = new Rectangle(pb.Width - rectsize, 0, rectsize, rectsize);
+            var rectRight = new Rectangle(pb.Width - rectsize, (int)Math.Round(sSenderHeight - rectsize / 2d), rectsize, rectsize);
+            var rectBottomRight = new Rectangle((int)Math.Round(sSenderWidth - rectsize / 2d), pb.Height - rectsize, rectsize, rectsize);
+            var rectBottom = new Rectangle(pb.Width - rectsize, pb.Height - rectsize, rectsize, rectsize);
+            var rectBottomLeft = new Rectangle(0, pb.Height - rectsize, rectsize, rectsize);
+            var rectLeft = new Rectangle(0, (int)Math.Round(sSenderHeight - rectsize / 2d), rectsize, rectsize);
 
 
             // If mDrawRect = True And mblnResizingPicBoxFlag = False Then

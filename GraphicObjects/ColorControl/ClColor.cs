@@ -14,7 +14,7 @@ using System.Drawing;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     public struct HSBorRGB

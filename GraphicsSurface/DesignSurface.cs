@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,10 +9,9 @@ using System.IO;
 using static System.Math;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using static Microsoft.MSDN.Samples.GraphicObjects.GraphicObjects;
-using Microsoft.VisualBasic;
+using static GraphicObjects.GraphicObjects;
 
-namespace Microsoft.Msdn.Samples.DesignSurface
+namespace DesignSurface
 {
 
     public class DesignSurface : UserControl
@@ -22,7 +21,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
         public DesignSurface() : base()
         {
-            gobjc = new MSDN.Samples.GraphicObjects.GraphicObjectCollection();
+            gobjc = new GraphicObjects.GraphicObjectCollection();
 
             // This call is required by the Windows Form Designer.
             InitializeComponent();
@@ -284,6 +283,16 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         }
         private PropertyGrid _PropertyGrid1;
 
+        private Panel _propertyGridPanel;
+
+        private Panel _propertiesCaption;
+
+        private Button _btnTogglePropertyGrid;
+
+        private const int PropertyGridExpandedWidth = 220;
+
+        private const int PropertyGridCollapsedWidth = 22;
+
         internal virtual PropertyGrid PropertyGrid1
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -295,7 +304,55 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             [MethodImpl(MethodImplOptions.Synchronized)]
             set
             {
+                if (_PropertyGrid1 != null && _propertyGridPanel != null)
+                {
+                    _propertyGridPanel.Controls.Remove(_PropertyGrid1);
+                }
+
                 _PropertyGrid1 = value;
+                if (_PropertyGrid1 != null)
+                {
+                    _PropertyGrid1.Dock = DockStyle.Fill;
+                    if (_propertyGridPanel != null)
+                    {
+                        _propertyGridPanel.Controls.Add(_PropertyGrid1);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// True when the property grid pane is collapsed to its toggle strip.
+        /// </summary>
+        public bool PropertyGridCollapsed
+        {
+            get
+            {
+                return _propertyGridPanel != null && _propertyGridPanel.Width <= PropertyGridCollapsedWidth;
+            }
+
+            set
+            {
+                SetPropertyGridCollapsed(value);
+            }
+        }
+
+        private void SetPropertyGridCollapsed(bool collapsed)
+        {
+            if (_propertyGridPanel == null)
+            {
+                return;
+            }
+
+            if (collapsed)
+            {
+                _propertyGridPanel.Width = PropertyGridCollapsedWidth;
+                _btnTogglePropertyGrid.Text = "«";
+            }
+            else
+            {
+                _propertyGridPanel.Width = PropertyGridExpandedWidth;
+                _btnTogglePropertyGrid.Text = "»";
             }
         }
         private PictureBox _pbCropped;
@@ -338,12 +395,16 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             _ds_mnuEditSelected = new MenuItem();
             _setupPrint = new PrintDialog();
             _designSurfacePrintDocument = new System.Drawing.Printing.PrintDocument();
+            _designSurfacePrintDocument.PrintPage += DesignSurfacePrintDocument_PrintPage;
             _fontChooser = new FontDialog();
             _colorPicker = new ColorDialog();
             _ofdImage = new OpenFileDialog();
             _sfdImage = new SaveFileDialog();
             _ppdPreview = new PrintPreviewDialog();
             _PropertyGrid1 = new PropertyGrid();
+            _propertyGridPanel = new Panel();
+            _propertiesCaption = new Panel();
+            _btnTogglePropertyGrid = new Button();
             _pbCropped = new PictureBox();
             _pbCropped.Click += new EventHandler(pbCropped_Click);
             ((System.ComponentModel.ISupportInitialize)_pbCropped).BeginInit();
@@ -405,11 +466,33 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             // 
             // PropertyGrid1
             // 
-            _PropertyGrid1.Dock = DockStyle.Right;
-            _PropertyGrid1.Location = new Point(403, 0);
+            _PropertyGrid1.Dock = DockStyle.Fill;
             _PropertyGrid1.Name = "_PropertyGrid1";
-            _PropertyGrid1.Size = new Size(105, 620);
-            _PropertyGrid1.TabIndex = 0;
+            // 
+            // propertyGridPanel
+            // 
+            _propertyGridPanel.Controls.Add(_PropertyGrid1);
+            _propertyGridPanel.Controls.Add(_propertiesCaption);
+            _propertyGridPanel.Controls.Add(_btnTogglePropertyGrid);
+            _propertyGridPanel.Dock = DockStyle.Right;
+            _propertyGridPanel.Name = "_propertyGridPanel";
+            _propertyGridPanel.Width = PropertyGridExpandedWidth;
+            // 
+            // propertiesCaption
+            // 
+            _propertiesCaption.Dock = DockStyle.Left;
+            _propertiesCaption.Name = "_propertiesCaption";
+            _propertiesCaption.Size = new Size(20, 23);
+            _propertiesCaption.Paint += PropertiesCaption_Paint;
+            // 
+            // btnTogglePropertyGrid
+            // 
+            _btnTogglePropertyGrid.Dock = DockStyle.Left;
+            _btnTogglePropertyGrid.Name = "_btnTogglePropertyGrid";
+            _btnTogglePropertyGrid.Size = new Size(22, 23);
+            _btnTogglePropertyGrid.Text = "»";
+            _btnTogglePropertyGrid.UseVisualStyleBackColor = true;
+            _btnTogglePropertyGrid.Click += BtnTogglePropertyGrid_Click;
             // 
             // pbCropped
             // 
@@ -425,7 +508,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             AutoScroll = true;
             BackColor = SystemColors.Window;
             Controls.Add(_pbCropped);
-            Controls.Add(_PropertyGrid1);
+            Controls.Add(_propertyGridPanel);
             Name = "DesignSurface";
             Size = new Size(508, 620);
             ((System.ComponentModel.ISupportInitialize)_pbCropped).EndInit();
@@ -466,10 +549,10 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         private int m_GridLineWidth = 1;
         private int m_MarginLineWidth = 1;
         private Color m_MarginColor = Color.Green;
-        private MSDN.Samples.GraphicObjects.GraphicObjects m_SelectedObject, m_CutSelectedObject, m_CopySelectedObject, m_PasteSelectedObject, m_UndoSelectedObject, m_RedoSelectedObject, MouseDragStart;
+        private GraphicObjects.GraphicObjects m_SelectedObject, m_CutSelectedObject, m_CopySelectedObject, m_PasteSelectedObject, m_UndoSelectedObject, m_RedoSelectedObject, MouseDragStart;
         private float m_Zoom = 0.5f;
         private ContextMenu m_ContextMenu;
-        private MSDN.Samples.GraphicObjects.GraphicObjectCollection m_drawingObjects = new MSDN.Samples.GraphicObjects.GraphicObjectCollection();
+        private GraphicObjects.GraphicObjectCollection m_drawingObjects = new GraphicObjects.GraphicObjectCollection();
         private Image m_SelectedImage;
         private int m_RectStartX, m_RectStartY, m_RectEndX, m_RectEndY, m_ImageObjWidth, m_ImageObjHeight, m_Drag_Y, m_Drag_X;
         // Private ReadOnly RedoList As New List(Of GraphicObjects.GraphicObjects)
@@ -478,9 +561,9 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         private bool allObjectsDeleted = false;
         private string strImagePath;
         private bool blnLandscape, CanCutObject;
-        private MSDN.Samples.GraphicObjects.GraphicObjects ClonedTextObject;
-        private MSDN.Samples.GraphicObjects.GraphicObjects ClonedObject, CutObject;
-        private MSDN.Samples.GraphicObjects.GraphicObjects CurrentGraphicImage;
+        private GraphicObjects.GraphicObjects ClonedTextObject;
+        private GraphicObjects.GraphicObjects ClonedObject, CutObject;
+        private GraphicObjects.GraphicObjects CurrentGraphicImage;
         private Rectangle SelectRectangle = new Rectangle();
         private RectangleF StartlRectangle = new RectangleF();
 
@@ -507,14 +590,14 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         private Point MousePos;
         private SolidBrush BackBrush;
         private Pen[] LinePen = new Pen[2];
-        private MSDN.Samples.GraphicObjects.GraphicObjectCollection _gobjc;
+        private GraphicObjects.GraphicObjectCollection _gobjc;
 
         // Runtime drag/hit-test state. It is a settable collection, so without these attributes the
         // WinForms designer tries to code-generate AddRange calls for it and fails on the
         // System.Drawing.Graphics members inside (not serializable).
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual MSDN.Samples.GraphicObjects.GraphicObjectCollection gobjc
+        public virtual GraphicObjects.GraphicObjectCollection gobjc
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get
@@ -529,12 +612,12 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
         }
 
-        public Stack<MSDN.Samples.GraphicObjects.GraphicObjects> UndoStack = new Stack<MSDN.Samples.GraphicObjects.GraphicObjects>();
-        public Stack<MSDN.Samples.GraphicObjects.GraphicObjects> RedoStack = new Stack<MSDN.Samples.GraphicObjects.GraphicObjects>();
+        public Stack<GraphicObjects.GraphicObjects> UndoStack = new Stack<GraphicObjects.GraphicObjects>();
+        public Stack<GraphicObjects.GraphicObjects> RedoStack = new Stack<GraphicObjects.GraphicObjects>();
 
-        public DesignSurface(MSDN.Samples.GraphicObjects.GraphicObjects gobj)
+        public DesignSurface(GraphicObjects.GraphicObjects gobj)
         {
-            gobjc = new MSDN.Samples.GraphicObjects.GraphicObjectCollection();
+            gobjc = new GraphicObjects.GraphicObjectCollection();
             MouseDown += GraphicsSurface_MouseDown;
             MouseUp += GraphicsSurface_MouseUp;
             MouseMove += GraphicsSurface_MouseMove;
@@ -554,7 +637,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 // The stream has to be closed: an open one keeps the file locked for as long as the
                 // process lives, so the surface could not be loaded again after being saved.
                 using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-                    m_drawingObjects = (MSDN.Samples.GraphicObjects.GraphicObjectCollection)myBinarySerializer.Deserialize(stream);
+                    m_drawingObjects = (GraphicObjects.GraphicObjectCollection)myBinarySerializer.Deserialize(stream);
                 SelectedObject = null;
                 StatusUpdate?.Invoke(this, new StatusUpdateEventArgs(StatusUpdateType.FileLoaded, null, string.Format("file {0} loaded into the Graphic Surface", fileName), default, (float)default));
                 Invalidate();
@@ -645,7 +728,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                     SelectedObject = null;
                     // Cycle through all drawrin objects to get min and max size using objects
                     int YMin = default, YMax = default, XMin = default, XMax = default, Count = default;
-                    foreach (MSDN.Samples.GraphicObjects.GraphicObjects DrawnObject in drawingObjects)
+                    foreach (GraphicObjects.GraphicObjects DrawnObject in drawingObjects)
                     {
                         if (Count == 0) // First Drawn Object Check for Min and Max
                         {
@@ -745,7 +828,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             catch (Exception ex)
             {
-                Interaction.MsgBox(ex.Message);
+                MessageBox.Show(ex.Message);
             }
 
 
@@ -1022,7 +1105,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         // End Set
         // End Property
 
-        public virtual MSDN.Samples.GraphicObjects.GraphicObjects CopyGraphicObject
+        public virtual GraphicObjects.GraphicObjects CopyGraphicObject
         {
             get
             {
@@ -1034,7 +1117,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
         }
 
-        public virtual MSDN.Samples.GraphicObjects.GraphicObjects PasteGraphicImage
+        public virtual GraphicObjects.GraphicObjects PasteGraphicImage
         {
             get
             {
@@ -1109,7 +1192,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
         }
 
-        public virtual MSDN.Samples.GraphicObjects.GraphicObjectCollection drawingObjects
+        public virtual GraphicObjects.GraphicObjectCollection drawingObjects
         {
             get
             {
@@ -1353,6 +1436,11 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             g.Clear(m_NonPrintingAreaColor);
             g.FillRectangle(new SolidBrush(BackColor), bounds);
 
+            if (templateActive)
+            {
+                return;
+            }
+
             var gridPen = new Pen(GridColor, m_GridLineWidth);
             int i;
             var loopTo = bounds.Height;
@@ -1371,6 +1459,31 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             marginPen.DashStyle = DashStyle.Dash;
             marginPen.Width = m_MarginLineWidth;
             g.DrawRectangle(marginPen, margins);
+        }
+
+        protected virtual void DrawTemplateCells(Graphics g)
+        {
+            if (!templateActive)
+            {
+                return;
+            }
+
+            var pageBounds = ZoomRectangle(ConvertToPixels(SurfaceBounds));
+            var cellPen = new Pen(Color.FromArgb(170, Color.Gray), 1f);
+
+            for (var r = 0; r < t_Rows; r++)
+            {
+                for (var c = 0; c < t_Columns; c++)
+                {
+                    var cell = GetTemplateCellBounds(c, r);
+                    var cellRect = ZoomRectangle(ConvertToPixels(cell));
+                    cellRect.Intersect(pageBounds);
+                    if (cellRect.Width > 0 && cellRect.Height > 0)
+                    {
+                        g.DrawRectangle(cellPen, cellRect);
+                    }
+                }
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -1394,6 +1507,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 if (m_ShowGrid)
                 {
                     DrawGrid(g);
+                    DrawTemplateCells(g);
                 }
 
 
@@ -1678,18 +1792,29 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 MousePos = new Point(e.X, e.Y);
                 MousePos = PointToScreen(MousePos);
 
+                var pinned = SelectedObject != null && SelectedObject.IsPinned;
+
                 if (MouseInRect & ActiveDrag == -1)
                 {
-                    RectDragging = true;
+                    if (!pinned)
+                    {
+                        RectDragging = true;
+                    }
                 }
                 // OriginalRectangle = gobjc.DragRectangleFangle
                 else if (ActiveDrag != -1)
                 {
-                    RectResizing = true;
+                    if (!pinned)
+                    {
+                        RectResizing = true;
+                    }
                 }
                 else if (ActiveDrag > 7)
                 {
-                    rotating = true;
+                    if (!pinned)
+                    {
+                        rotating = true;
+                    }
                 }
             }
         }
@@ -2069,7 +2194,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                     Invalidate();
                 }
 
-                MSDN.Samples.GraphicObjects.GraphicObjectCollection.Zoom = Zoom;
+                GraphicObjects.GraphicObjectCollection.Zoom = Zoom;
                 // Dim IG As GraphicObjects.ImageGraphic
                 // IG.Draw(Nothing)
             }
@@ -2077,7 +2202,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         }
 
         // TODO: Rewrite to handle multiple selected objects
-        public MSDN.Samples.GraphicObjects.GraphicObjects SelectedObject
+        public GraphicObjects.GraphicObjects SelectedObject
         {
             get
             {
@@ -2090,6 +2215,11 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                     if (m_drawingObjects.Contains(value) || value is null)
                     {
                         m_SelectedObject = value;
+                        if (PropertyGrid1 != null)
+                        {
+                            PropertyGrid1.SelectedObject = value is null ? (object)this : value;
+                            PropertyGrid1.Refresh();
+                        }
                         SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(value));
                         if (value is null)
                         {
@@ -2131,7 +2261,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         public void DeleteAllObjects()
         {
             // add all deleted objects to list so it can be undone
-            foreach (MSDN.Samples.GraphicObjects.GraphicObjects gobj in drawingObjects)
+            foreach (GraphicObjects.GraphicObjects gobj in drawingObjects)
                 // Me.RedoList.Add(gobj)
                 gobj.objType = ObjectTypes.DeletedObject;
             // UndoList.Clear()
@@ -2182,7 +2312,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
             Cursor = Cursors.WaitCursor;
             // Create a new graphic object
-            MSDN.Samples.GraphicObjects.GraphicObjects gObj = null;
+            GraphicObjects.GraphicObjects gObj = null;
             // Add 1 To image count to track images
             intObjectCount += 1;
             Bitmap BMImage = (Bitmap)TheImage;
@@ -2200,7 +2330,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 case ObjectTypes.Linked:
                     {
 
-                        var myLinkedImage = new MSDN.Samples.GraphicObjects.LinkedImageGraphic(50, 50, strImagePath);
+                        var myLinkedImage = new GraphicObjects.LinkedImageGraphic(50, 50, strImagePath);
                         BMImage = new Bitmap(strImagePath);
                         gObj.Image = BMImage;
                         gObj = myLinkedImage;
@@ -2211,7 +2341,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 case ObjectTypes.Text:
                     {
 
-                        var MyNewImage = new MSDN.Samples.GraphicObjects.TextGraphic(new Point(50, 50), TheImage);
+                        var MyNewImage = new GraphicObjects.TextGraphic(new Point(50, 50), TheImage);
                         gObj = MyNewImage;
                         gObj.AutoSize = true;
                         gObj.Image = TheImage;
@@ -2224,7 +2354,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 case ObjectTypes.EmbeddedImageGraphic: // Allows images without paths
                     {
 
-                        var MyNewImage = new MSDN.Samples.GraphicObjects.EmbeddedImageGraphic(new Point(50, 50), TheImage);
+                        var MyNewImage = new GraphicObjects.EmbeddedImageGraphic(new Point(50, 50), TheImage);
                         gObj = MyNewImage;
                         gObj.AutoSize = true;
                         gObj.Image = TheImage;
@@ -2242,7 +2372,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
 
                         try
                         {
-                            var myRectangle = new MSDN.Samples.GraphicObjects.RectangleGraphic(SurfaceMargins.X, SurfaceMargins.Y, SurfaceMargins.Width, SurfaceMargins.Height);
+                            var myRectangle = new GraphicObjects.RectangleGraphic(SurfaceMargins.X, SurfaceMargins.Y, SurfaceMargins.Width, SurfaceMargins.Height);
                             myRectangle.Fill = true;
                             colorPicker.ShowDialog();
                             myRectangle.FillColor = colorPicker.Color;
@@ -2271,7 +2401,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                                 {
 
                                     strImagePath = ofdImage.FileName;
-                                    var myBackgroundImage = new MSDN.Samples.GraphicObjects.BackGroundImageGraphic(0, 0, strImagePath);
+                                    var myBackgroundImage = new GraphicObjects.BackGroundImageGraphic(0, 0, strImagePath);
                                     gObj = myBackgroundImage;
 
                                     // This sets the new image Size
@@ -2365,7 +2495,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
             catch (Exception ex)
             {
-                Interaction.MsgBox(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -2419,37 +2549,314 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             MessageBox.Show(pbCropped.Image.Size.ToString());
         }
 
-        public void GridLandscape()
+        private void BtnTogglePropertyGrid_Click(object sender, EventArgs e)
+        {
+            SetPropertyGridCollapsed(!PropertyGridCollapsed);
+        }
+
+        private void PropertiesCaption_Paint(object sender, PaintEventArgs e)
+        {
+            var caption = (Panel)sender;
+            e.Graphics.TranslateTransform(caption.Width / 2f, caption.Height / 2f);
+            e.Graphics.RotateTransform(-90f);
+            using (var format = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+            using (var brush = new SolidBrush(caption.ForeColor))
+            {
+                e.Graphics.DrawString("Properties", caption.Font, brush, 0f, 0f, format);
+            }
+        }
+
+        public enum GridOrientation
+        {
+            Portrait,
+            Landscape
+        }
+
+        public enum PageSizeKind
+        {
+            Letter,
+            Legal,
+            Tabloid,
+            Executive,
+            A3,
+            A4,
+            A5,
+            A6
+        }
+
+        private PageSizeKind m_PageSize = PageSizeKind.Letter;
+
+        // Custom page size (portrait dims) set by an imported template's
+        // non-uniform fallback layout. Cleared when PageSize/Template change.
+        private Size? m_ImportedPageSize;
+
+        private LabelSheet m_Template;
+
+        // Effective template geometry in surface units (1/100 inch), already
+        // transposed for landscape orientation. Only valid when templateActive.
+        private bool templateActive;
+
+        private int t_SheetWidth, t_SheetHeight, t_Columns, t_Rows;
+
+        private int t_LabelWidth, t_LabelHeight, t_MarginLeft, t_MarginTop, t_PitchX, t_PitchY;
+
+        // Command-style properties: the PropertyGrid sets them true, the setter runs the
+        // import and snaps the value back to false so they behave like menu items.
+        private bool _importWordTemplate;
+        private bool _importSpreadsheet;
+
+        /// <summary>
+        /// Gets or sets the page size of the design surface grid.
+        /// Dimensions are in 1/100 inch units (Letter = 8.5 x 11in -> 850 x 1100).
+        /// </summary>
+        [Description("The page size of the design surface (Letter, Legal, Tabloid, Executive, A3, A4, A5 or A6).")]
+        public PageSizeKind PageSize
+        {
+            get
+            {
+                return m_PageSize;
+            }
+
+            set
+            {
+                if (value == m_PageSize)
+                {
+                    return;
+                }
+
+                m_PageSize = value;
+                m_ImportedPageSize = null;
+                ApplyPageSetup();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the label sheet template (e.g. Avery 5160). When set,
+        /// the template's sheet size and label grid replace the PageSize setup.
+        /// Set to null or LabelSheet.NoTemplate to clear.
+        /// </summary>
+        [TypeConverter(typeof(LabelSheetConverter))]
+        [Description("Label sheet template (Avery presets). Overrides PageSize when set.")]
+        public LabelSheet Template
+        {
+            get
+            {
+                return m_Template;
+            }
+
+            set
+            {
+                var newTemplate = ReferenceEquals(value, LabelSheet.NoTemplate) ? null : value;
+                if (ReferenceEquals(newTemplate, m_Template))
+                {
+                    return;
+                }
+
+                m_Template = newTemplate;
+                m_ImportedPageSize = null;
+                ApplyPageSetup();
+            }
+        }
+
+        /// <summary>
+        /// Check to import a Word template (.docx/.dotx). Opens a file picker and
+        /// imports the document's table as a label sheet or cell outlines.
+        /// Resets itself — it is a command, not stored state.
+        /// </summary>
+        [Category("Template")]
+        [Description("Import a Word template (.docx/.dotx). Check to browse for a file.")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool ImportWordTemplate
+        {
+            get { return _importWordTemplate; }
+            set
+            {
+                _importWordTemplate = false;
+                if (value) PickAndImport("Import Word Template", "Word templates (*.docx;*.dotx)|*.docx;*.dotx");
+                RefreshPropertyGrid();
+            }
+        }
+
+        /// <summary>
+        /// Check to import a spreadsheet template (.xlsx/.xlsm). Opens a file
+        /// picker and imports the sheet's cell grid as a label sheet or outlines.
+        /// Resets itself — it is a command, not stored state.
+        /// </summary>
+        [Category("Template")]
+        [Description("Import a spreadsheet template (.xlsx/.xlsm). Check to browse for a file.")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool ImportSpreadsheet
+        {
+            get { return _importSpreadsheet; }
+            set
+            {
+                _importSpreadsheet = false;
+                if (value) PickAndImport("Import Spreadsheet Template", "Spreadsheets (*.xlsx;*.xlsm)|*.xlsx;*.xlsm");
+                RefreshPropertyGrid();
+            }
+        }
+
+        private void PickAndImport(string title, string filter)
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = title;
+                ofd.Filter = filter + "|All files (*.*)|*.*";
+                ofd.CheckFileExists = true;
+                ofd.RestoreDirectory = true;
+                if (ofd.ShowDialog(FindForm()) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                ImportOfficeTemplate(ofd.FileName);
+            }
+        }
+
+        private void RefreshPropertyGrid()
+        {
+            if (_PropertyGrid1 != null && !_PropertyGrid1.IsDisposed)
+            {
+                _PropertyGrid1.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// Returns the bounds of template cell (column, row) in 1/100 inch
+        /// surface units, or Rectangle.Empty when no template is active.
+        /// </summary>
+        public Rectangle GetTemplateCellBounds(int column, int row)
+        {
+            if (!templateActive)
+            {
+                return Rectangle.Empty;
+            }
+
+            return new Rectangle(
+                t_MarginLeft + column * t_PitchX,
+                t_MarginTop + row * t_PitchY,
+                t_LabelWidth,
+                t_LabelHeight);
+        }
+
+        /// <summary>
+        /// Gets or sets the grid/page orientation. Setting this resizes the
+        /// surface bounds and margins to match.
+        /// </summary>
+        [Description("The orientation of the design surface grid (Portrait or Landscape).")]
+        public GridOrientation Orientation
+        {
+            get
+            {
+                return blnLandscape ? GridOrientation.Landscape : GridOrientation.Portrait;
+            }
+
+            set
+            {
+                if (value == GridOrientation.Landscape)
+                {
+                    GridLandscape();
+                }
+                else
+                {
+                    GridPortrait();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the portrait dimensions of the selected PageSize in
+        /// 1/100 inch units.
+        /// </summary>
+        private Size GetPageSizeDimensions()
+        {
+            switch (m_PageSize)
+            {
+                case PageSizeKind.Legal:
+                    return new Size(850, 1400);
+                case PageSizeKind.Tabloid:
+                    return new Size(1100, 1700);
+                case PageSizeKind.Executive:
+                    return new Size(725, 1050);
+                case PageSizeKind.A3:
+                    return new Size(1169, 1654);
+                case PageSizeKind.A4:
+                    return new Size(827, 1169);
+                case PageSizeKind.A5:
+                    return new Size(583, 827);
+                case PageSizeKind.A6:
+                    return new Size(413, 583);
+                case PageSizeKind.Letter:
+                default:
+                    return new Size(850, 1100);
+            }
+        }
+
+        private void ApplyPageSetup()
         {
             if (intObjectCount != 0)
             {
-                Interaction.MsgBox("Changing the orientation will not change the objects on the surface and should be set up on empty surface.", MsgBoxStyle.Information);
+                MessageBox.Show("Changing the page size or orientation will not change the objects on the surface and should be set up on empty surface.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            if (m_Template != null)
+            {
+                templateActive = true;
+
+                // Portrait values straight from the template; landscape is a
+                // transpose (swap axes) of the same layout.
+                t_SheetWidth = blnLandscape ? m_Template.SheetHeight : m_Template.SheetWidth;
+                t_SheetHeight = blnLandscape ? m_Template.SheetWidth : m_Template.SheetHeight;
+                t_Columns = blnLandscape ? m_Template.Rows : m_Template.Columns;
+                t_Rows = blnLandscape ? m_Template.Columns : m_Template.Rows;
+                t_LabelWidth = blnLandscape ? m_Template.LabelHeight : m_Template.LabelWidth;
+                t_LabelHeight = blnLandscape ? m_Template.LabelWidth : m_Template.LabelHeight;
+                t_MarginLeft = blnLandscape ? m_Template.MarginTop : m_Template.MarginLeft;
+                t_MarginTop = blnLandscape ? m_Template.MarginLeft : m_Template.MarginTop;
+                t_PitchX = blnLandscape ? m_Template.PitchY : m_Template.PitchX;
+                t_PitchY = blnLandscape ? m_Template.PitchX : m_Template.PitchY;
+
+                SurfaceBounds = new Rectangle(0, 0, t_SheetWidth, t_SheetHeight);
+
+                // Printable area = bounding box of all label cells.
+                var right = t_MarginLeft + (t_Columns - 1) * t_PitchX + t_LabelWidth;
+                var bottom = t_MarginTop + (t_Rows - 1) * t_PitchY + t_LabelHeight;
+                SurfaceMargins = new Rectangle(t_MarginLeft, t_MarginTop, right - t_MarginLeft, bottom - t_MarginTop);
+                Invalidate();
+                return;
+            }
+
+            templateActive = false;
+
+            var pageDims = m_ImportedPageSize ?? GetPageSizeDimensions();
+            int pageWidth = pageDims.Width;
+            int pageHeight = pageDims.Height;
+
+            if (blnLandscape)
+            {
+                int tmp = pageWidth;
+                pageWidth = pageHeight;
+                pageHeight = tmp;
+            }
+
+            SurfaceBounds = new Rectangle(0, 0, pageWidth, pageHeight);
+            SurfaceMargins = new Rectangle(10, 10, pageWidth - 20, pageHeight - 20);
+            Invalidate();
+        }
+
+        public void GridLandscape()
+        {
             blnLandscape = true;
-            SurfaceBounds = new Rectangle(0, 0, 1100, 860);
-            SurfaceMargins = new Rectangle(10, 10, 1080, 830);
-            // sbImageSize.Text = "Current Print Size = " & "11" & " X " & "8.5" & " " & "Inches"
-            // sbOrientation.Text = "Landscape"
-            Invalidate();
-            Invalidate();
+            ApplyPageSetup();
         }
 
         public void GridPortrait()
         {
-            if (intObjectCount != 0)
-            {
-                Interaction.MsgBox("Changing the orientation will not change the objects on the surface and should be set up on empty surface.", MsgBoxStyle.Information);
-            }
             blnLandscape = false;
-            SurfaceBounds = new Rectangle(0, 0, 860, 1100);
-            SurfaceMargins = new Rectangle(10, 10, 830, 1080);
-            // sbImageSize.Text = "Current Print Size = " & "8.5" & " X " & "11" & " " & "Inches"
-            // sbOrientation.Text = "Portrait"
-            Invalidate();
-            Invalidate();
+            ApplyPageSetup();
         }
 
-        public void CopyObject(MSDN.Samples.GraphicObjects.GraphicObjects gobj)
+        public void CopyObject(GraphicObjects.GraphicObjects gobj)
         {
             // ClonedObject = Nothing
             // If Me.SelectedObject Is Nothing Then Exit Sub
@@ -2542,7 +2949,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         }
 
         // Update the propertie grid
-        public void SelectedObjectChanged(MSDN.Samples.GraphicObjects.GraphicObjects gobj = null)
+        public void SelectedObjectChanged(GraphicObjects.GraphicObjects gobj = null)
         {
             if (gobj is null)
             {
@@ -2550,7 +2957,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             // PropertyGrid1.SelectedObject = Nothing
             else
             {
-                Interaction.MsgBox("Object Changed");
+                MessageBox.Show("Object Changed");
             }
         }
 
@@ -2576,7 +2983,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message + Constants.vbCrLf + "Current Object is already Open", "File Failed To Load");
+                        MessageBox.Show(ex.Message + Environment.NewLine + "Current Object is already Open", "File Failed To Load");
                     }
                 }
             }
@@ -2587,10 +2994,10 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         {
             if (intObjectCount <= 0)
             {
-                Interaction.MsgBox("Nothing to save", MsgBoxStyle.Critical, "Save Graphic Error");
+                MessageBox.Show("Nothing to save", "Save Graphic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return; // no known object to be saved
             }
-            foreach (MSDN.Samples.GraphicObjects.GraphicObjects dobj in drawingObjects)
+            foreach (GraphicObjects.GraphicObjects dobj in drawingObjects)
                 Debug.WriteLine(string.Format("{0},{1}", dobj.X, dobj.Y));
 
             {
@@ -2614,15 +3021,168 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
         }
 
+        /// <summary>
+        /// Configures the print document's paper size, orientation and margins
+        /// from the current PageSize/Template/Orientation settings.
+        /// </summary>
+        private void ApplyPrintSettings()
+        {
+            var settings = designSurfacePrintDocument.DefaultPageSettings;
+            settings.Landscape = blnLandscape;
+            settings.Margins = new System.Drawing.Printing.Margins(25, 25, 25, 25);
+
+            int sheetWidth;
+            int sheetHeight;
+
+            if (templateActive && m_Template != null)
+            {
+                // Template sheet size (always portrait; Landscape flag rotates).
+                sheetWidth = m_Template.SheetWidth;
+                sheetHeight = m_Template.SheetHeight;
+            }
+            else
+            {
+                var dims = m_ImportedPageSize ?? GetPageSizeDimensions();
+                sheetWidth = dims.Width;
+                sheetHeight = dims.Height;
+            }
+
+            // PaperSize dimensions are in hundredths of a millimeter.
+            // 1 surface unit = 1/100 inch = 0.254 mm = 25.4 hundredths-mm.
+            settings.PaperSize = new System.Drawing.Printing.PaperSize("Custom",
+                (int)Math.Round(sheetWidth * 25.4),
+                (int)Math.Round(sheetHeight * 25.4));
+        }
+
+        private void DesignSurfacePrintDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            try
+            {
+                // Render the page area (objects only, no grid/guides) to a
+                // bitmap using the same pixel space as the screen, then fit it
+                // onto the printer's printable area preserving aspect ratio.
+                var pageBounds = ZoomRectangle(ConvertToPixels(SurfaceBounds));
+                using (var bmp = new Bitmap(Math.Max(1, pageBounds.Width), Math.Max(1, pageBounds.Height)))
+                {
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        g.Clear(BackColor);
+                        drawingObjects.HorizontalResolution = (int)Math.Round(g.DpiX);
+                        drawingObjects.VerticalResolution = (int)Math.Round(g.DpiY);
+                        drawingObjects.DrawObjects(g, Zoom);
+                    }
+
+                    var marginBounds = e.MarginBounds;
+                    var scale = Math.Min((float)marginBounds.Width / bmp.Width, (float)marginBounds.Height / bmp.Height);
+                    var drawWidth = (int)Math.Round(bmp.Width * scale);
+                    var drawHeight = (int)Math.Round(bmp.Height * scale);
+                    var drawX = marginBounds.X + (marginBounds.Width - drawWidth) / 2;
+                    var drawY = marginBounds.Y + (marginBounds.Height - drawHeight) / 2;
+                    e.Graphics.DrawImage(bmp, drawX, drawY, drawWidth, drawHeight);
+                }
+            }
+            catch (Exception ex)
+            {
+                e.Cancel = true;
+                MessageBox.Show("Print failed: " + ex.Message, "Print Graphic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            e.HasMorePages = false;
+        }
+
+        /// <summary>
+        /// Prompts for an Office template file (.docx/.dotx/.xlsx/.xlsm) and imports it.
+        /// Uniform label grids become the active Template; anything else is
+        /// placed on the surface as cell outline objects.
+        /// </summary>
+        public void ImportTemplate()
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Import Office Template";
+                ofd.Filter = "Office templates (*.dotx;*.docx;*.xlsx;*.xlsm)|*.dotx;*.docx;*.xlsx;*.xlsm|All files (*.*)|*.*";
+                ofd.CheckFileExists = true;
+                ofd.RestoreDirectory = true;
+                if (ofd.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                ImportOfficeTemplate(ofd.FileName);
+            }
+        }
+
+        /// <summary>
+        /// Imports an Office/OpenXML template file. Returns true on success.
+        /// </summary>
+        public bool ImportOfficeTemplate(string path)
+        {
+            var ext = Path.GetExtension(path);
+            OfficeTemplateResult result;
+            if (string.Equals(ext, ".xlsx", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(ext, ".xlsm", StringComparison.OrdinalIgnoreCase))
+            {
+                result = SpreadsheetTemplateImporter.Import(path);
+            }
+            else
+            {
+                result = OfficeTemplateImporter.Import(path);
+            }
+            if (result == null)
+            {
+                MessageBox.Show("Could not read that file. Choose an Office template (.docx/.dotx/.xlsx/.xlsm).", "Import Template", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (result.Sheet != null)
+            {
+                blnLandscape = result.Landscape;
+                Template = result.Sheet;
+                MessageBox.Show("Template '" + result.Sheet.Name + "' imported (" + result.Sheet.Columns * result.Sheet.Rows + " labels).", "Import Template", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return true;
+            }
+
+            if (result.Cells.Count == 0)
+            {
+                MessageBox.Show("No label cells were found in that template.", "Import Template", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            // Non-uniform layout: size the page to the imported sheet, then
+            // place each label cell as an outline object so the user can see
+            // the template regions and fill them manually.
+            blnLandscape = result.Landscape;
+            if (result.PageSize.Width > 0 && result.PageSize.Height > 0)
+            {
+                m_ImportedPageSize = result.PageSize;
+            }
+            ApplyPageSetup();
+
+            foreach (var cell in result.Cells)
+            {
+                var rect = new GraphicObjects.RectangleGraphic(cell.X, cell.Y, cell.Width, cell.Height);
+                rect.AutoSize = false;
+                rect.IsPinned = true; // template guides stay put; objects on top remain movable
+                drawingObjects.Add(rect);
+                intObjectCount += 1;
+            }
+
+            Update();
+            Invalidate();
+            MessageBox.Show(result.Cells.Count + " cell outlines were placed on the surface. The layout isn't a uniform grid, so it can't become a template.", "Import Template", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return true;
+        }
+
         public void PrintPreview()
         {
             try
             {
                 if (intObjectCount <= 0)
                 {
-                    Interaction.MsgBox("Nothing to preview", MsgBoxStyle.Critical, "Preview Graphic Error");
+                    MessageBox.Show("Nothing to preview", "Preview Graphic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return; // no known object to be saved
                 }
+                ApplyPrintSettings();
                 var ppd = new PrintPreviewDialog();
                 ppd.TopMost = true;
                 ppd.Document = designSurfacePrintDocument;
@@ -2631,7 +3191,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
             catch (Exception ex)
             {
-                Interaction.MsgBox(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -2639,9 +3199,10 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         {
             if (intObjectCount <= 0)
             {
-                Interaction.MsgBox("Nothing to print", MsgBoxStyle.Critical, "Print Graphic Error");
+                MessageBox.Show("Nothing to print", "Print Graphic Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return; // no known object to be saved
             }
+            ApplyPrintSettings();
             setupPrint.ShowDialog();
         }
 
@@ -2672,7 +3233,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
             }
         }
 
-        private void btnHideGrabHandles_Click(MSDN.Samples.GraphicObjects.GraphicObjects gobj, EventArgs e)
+        private void btnHideGrabHandles_Click(GraphicObjects.GraphicObjects gobj, EventArgs e)
         {
             // DrawControlBorder(gobj, False)
             Invalidate();
@@ -2681,13 +3242,18 @@ namespace Microsoft.Msdn.Samples.DesignSurface
         private void DesignSurface_Load(object sender, EventArgs e)
         {
             DoubleBuffered = true;
-            MSDN.Samples.GraphicObjects.GraphicObjectCollection.Zoom = Zoom;
+            GraphicObjects.GraphicObjectCollection.Zoom = Zoom;
             BackBrush = new SolidBrush(Color.LightGray);
             LinePen[0] = new Pen(ForeColor);
             LinePen[1] = new Pen(ForeColor);
             LinePen[1].DashPattern = new float[] { 5f, 3f };
 
             // LoadDrag_Handles()
+
+            if (PropertyGrid1 != null)
+            {
+                PropertyGrid1.SelectedObject = this;
+            }
 
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
         }

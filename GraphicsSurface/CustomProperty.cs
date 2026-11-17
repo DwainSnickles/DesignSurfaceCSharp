@@ -2,7 +2,7 @@
 using System.Collections;
 using System.ComponentModel;
 
-namespace Microsoft.Msdn.Samples.DesignSurface.CustomGrid
+namespace DesignSurface.CustomGrid
 {
 
     /// <summary>

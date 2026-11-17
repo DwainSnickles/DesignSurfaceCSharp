@@ -5,7 +5,7 @@ using static System.Runtime.InteropServices.Marshal;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     public class EdgeDetectHomogenity

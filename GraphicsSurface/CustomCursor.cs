@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Microsoft.Msdn.Samples.DesignSurface
+namespace DesignSurface
 {
 
 

@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("GraphicObjects")]
 [assembly: AssemblyDescription("Contains an object model to track graphic elements for use with a design surface.")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("MSDN")]
+[assembly: AssemblyProduct("GraphicObjects")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: CLSCompliant(true)]

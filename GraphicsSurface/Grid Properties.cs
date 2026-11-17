@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Microsoft.Msdn.Samples.DesignSurface
+namespace DesignSurface
 {
     /// 
     [DefaultProperty("Title")]

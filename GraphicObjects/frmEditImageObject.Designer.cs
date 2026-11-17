@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using VisualBasic = Microsoft.VisualBasic;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
     [VisualBasic.CompilerServices.DesignerGenerated()]
     public partial class frmEditImageObject : System.Windows.Forms.Form

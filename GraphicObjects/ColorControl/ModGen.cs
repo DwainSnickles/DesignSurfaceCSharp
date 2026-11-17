@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     static class ModGen

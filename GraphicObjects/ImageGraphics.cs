@@ -12,7 +12,7 @@
 // Requires the release version of .NET Framework
 using System.Drawing;
 
-namespace Microsoft.MSDN.Samples.GraphicObjects
+namespace GraphicObjects
 {
 
     [Serializable()]

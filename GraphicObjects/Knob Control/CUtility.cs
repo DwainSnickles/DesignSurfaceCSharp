@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     public class CUtility

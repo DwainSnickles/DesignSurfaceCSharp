@@ -15,7 +15,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 
-namespace Microsoft.MSDN.Samples.GraphicObjects
+namespace GraphicObjects
 {
 
     [Serializable()]
@@ -45,6 +45,7 @@ namespace Microsoft.MSDN.Samples.GraphicObjects
         protected int m_LineWidth = default;
         protected Color m_FillColor = default;
         protected bool m_Fill = false;
+        protected bool m_IsPinned = false;
         protected Color m_LineColor = default;
         // Draw-time only. Graphics cannot be serialized, and holding one made every object
         // impossible to save: the binary formatter rejects the whole graph.
@@ -619,6 +620,23 @@ namespace Microsoft.MSDN.Samples.GraphicObjects
             }
         }
 
+
+        /// <summary>
+        /// When true the object can be selected but not moved, resized or
+        /// rotated with the mouse. Used for imported template guides.
+        /// </summary>
+        [System.ComponentModel.Description("Prevent the object from being moved, resized or rotated.")]
+        public virtual bool IsPinned
+        {
+            get
+            {
+                return m_IsPinned;
+            }
+            set
+            {
+                m_IsPinned = value;
+            }
+        }
 
         public abstract void Draw(Graphics g);
 

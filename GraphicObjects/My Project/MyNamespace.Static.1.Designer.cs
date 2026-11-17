@@ -5,6 +5,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.VisualBasic;
+using VisualBasic = Microsoft.VisualBasic;
 
 /* TODO ERROR: Skipped IfDirectiveTrivia
 #If TARGET = "module" AndAlso _MYTYPE = "" Then
@@ -88,7 +89,7 @@ using Microsoft.VisualBasic;
 /* TODO ERROR: Skipped IfDirectiveTrivia
 #If _MYTYPE <> "Empty" Then
 */
-namespace Microsoft.MSDN.Samples.My
+namespace GraphicObjects.My
 {
 
     /* TODO ERROR: Skipped IfDirectiveTrivia

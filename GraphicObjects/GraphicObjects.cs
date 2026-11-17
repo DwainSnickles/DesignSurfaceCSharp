@@ -3,7 +3,7 @@ using System.Collections;
 using System.Drawing;
 using static System.Math;
 
-namespace Microsoft.MSDN.Samples.GraphicObjects
+namespace GraphicObjects
 {
 
     [Serializable()]

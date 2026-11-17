@@ -2,7 +2,7 @@
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     public class EdgeDetectionVertical

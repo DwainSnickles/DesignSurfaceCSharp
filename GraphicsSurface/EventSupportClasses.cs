@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Microsoft.Msdn.Samples.DesignSurface
+namespace DesignSurface
 {
 
     public class SelectionChangedEventArgs : EventArgs
     {
-        private MSDN.Samples.GraphicObjects.GraphicObjects m_SelectedObject;
+        private GraphicObjects.GraphicObjects m_SelectedObject;
 
-        public SelectionChangedEventArgs(MSDN.Samples.GraphicObjects.GraphicObjects selectedObject)
+        public SelectionChangedEventArgs(GraphicObjects.GraphicObjects selectedObject)
         {
             m_SelectedObject = selectedObject;
         }
 
-        public MSDN.Samples.GraphicObjects.GraphicObjects SelectedObject
+        public GraphicObjects.GraphicObjects SelectedObject
         {
             get
             {
@@ -38,12 +38,12 @@ namespace Microsoft.Msdn.Samples.DesignSurface
     public class StatusUpdateEventArgs : EventArgs
     {
         private StatusUpdateType m_UpdateType;
-        private MSDN.Samples.GraphicObjects.GraphicObjects m_SelectedObject;
+        private GraphicObjects.GraphicObjects m_SelectedObject;
         private string m_Message;
         private Point m_Coord;
         private float m_Amount;
 
-        public StatusUpdateEventArgs(StatusUpdateType UpdateType, MSDN.Samples.GraphicObjects.GraphicObjects Selection, string StatusMessage, Point Coord, float Amt)
+        public StatusUpdateEventArgs(StatusUpdateType UpdateType, GraphicObjects.GraphicObjects Selection, string StatusMessage, Point Coord, float Amt)
         {
 
             m_UpdateType = UpdateType;
@@ -60,7 +60,7 @@ namespace Microsoft.Msdn.Samples.DesignSurface
                 return m_UpdateType;
             }
         }
-        public MSDN.Samples.GraphicObjects.GraphicObjects SelectedObject
+        public GraphicObjects.GraphicObjects SelectedObject
         {
             get
             {

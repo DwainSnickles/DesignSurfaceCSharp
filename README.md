@@ -41,6 +41,23 @@ host text, images, shapes and more.
 - Save/open design documents and export the surface as an image
 - `StatusUpdate` / `SelectionChanged` events so a host app can react
 
+**Label & template import**
+
+- `LabelSheet` presets covering most common **Avery** label/card/name-badge
+  sheets (5160–5664 address & shipping, 5195–5395 specialty, 5305–5389 cards)
+  — pick one from the `Template` property and the surface snaps objects to
+  cell bounds via `GetTemplateCellBounds(col, row)`
+- Import Office documents as templates: **`.docx` / `.dotx`** (Word) and
+  **`.xlsx` / `.xlsm`** (Excel) — in code via `ImportTemplate()` or
+  `ImportOfficeTemplate(path)`, or from the PropertyGrid's *Template*
+  category using the `ImportWordTemplate` / `ImportSpreadsheet` commands
+  (check the box to browse; they reset themselves)
+- A uniform grid becomes the active `Template`; an irregular layout drops
+  pinned guide rectangles (`IsPinned = true`) that can be selected but not
+  moved, resized or rotated
+- Office template import is **still in progress** — it handles common
+  table/grid layouts, but some documents and files may not import correctly
+
 ## Usage
 
 ```csharp

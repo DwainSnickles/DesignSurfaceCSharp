@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     public class Part5Filters

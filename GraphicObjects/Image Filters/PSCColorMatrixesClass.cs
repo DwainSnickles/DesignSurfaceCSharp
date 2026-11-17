@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
     public class ColorMatrixes
     {

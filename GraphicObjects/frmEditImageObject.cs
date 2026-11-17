@@ -1,5 +1,5 @@
 ﻿
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
     public partial class frmEditImageObject
     {

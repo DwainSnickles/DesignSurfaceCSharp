@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using static System.Runtime.InteropServices.Marshal;
 
-namespace Microsoft.MSDN.Samples
+namespace GraphicObjects
 {
 
     public class greyScale
