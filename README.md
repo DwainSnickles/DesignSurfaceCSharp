@@ -101,3 +101,9 @@ Derived from the Microsoft DesignSurface sample; see each project's
 ---
 
 <p align="center"><sub>Built for <a href="https://dwainsnickles.github.io/">Dwain Snickles</a> · used by <a href="https://github.com/DwainSnickles/GraphicsWorkshop">GraphicsWorkshop</a></sub></p>
+
+## Support this project
+
+If this project saved you some time, you can leave a tip at
+[ko-fi.com/dwainhsnickles](https://ko-fi.com/dwainhsnickles) (cards, no account needed) or
+[paypal.me/YTDPlatinum](https://paypal.me/YTDPlatinum). Bug reports and pull requests are welcome too.
