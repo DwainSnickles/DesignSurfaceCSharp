@@ -1784,6 +1784,10 @@ namespace DesignSurface
 
             if (e.Button == MouseButtons.Left)
             {
+                if (SelectedObject is null)
+                {
+                    return;
+                }
 
                 // Dim rectf As Rectangle = Rectangle.Round(gobjc.DragRectangleFangle)
                 gobjc.DragRectangleF = new RectangleF(SelectedObject.X, SelectedObject.Y, SelectedObject.Width, SelectedObject.Height);
