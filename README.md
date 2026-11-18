@@ -9,6 +9,11 @@ host text, images, shapes and more.
 > **.NET 8+ edition:** [DesignSurface.NET](https://github.com/DwainSnickles/DesignSurface.NET) ports this codebase to modern .NET SDK-style projects.
 
 <p align="center">
+  <a href="https://www.nuget.org/packages/GraphicObjects/"><img src="https://img.shields.io/nuget/v/GraphicObjects.svg?label=GraphicObjects" alt="GraphicObjects on NuGet"></a>
+  <a href="https://www.nuget.org/packages/GraphicsSurface/"><img src="https://img.shields.io/nuget/v/GraphicsSurface.svg?label=GraphicsSurface" alt="GraphicsSurface on NuGet"></a>
+</p>
+
+<p align="center">
   <img src="assets/design-surface.svg" alt="DesignSurface canvas with grid, margins and graphic objects, beside a capabilities list" width="880">
 </p>
 
@@ -95,4 +100,4 @@ Derived from the Microsoft DesignSurface sample; see each project's
 
 ---
 
-<p align="center"><sub>Built for <a href="https://github.com/DwainSnickles">Dwain Snickles</a> · used by <a href="https://github.com/DwainSnickles/GraphicsWorkshop">GraphicsWorkshop</a></sub></p>
+<p align="center"><sub>Built for <a href="https://dwainsnickles.github.io/">Dwain Snickles</a> · used by <a href="https://github.com/DwainSnickles/GraphicsWorkshop">GraphicsWorkshop</a></sub></p>
